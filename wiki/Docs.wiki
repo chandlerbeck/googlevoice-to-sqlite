@@ -7,5 +7,5 @@ See Downloads/docs for the relevant specs so far.
 
 = Details =
 
--GVoice-DB-Diagram.pdf is a pseudo-spec for the proposed SQLite database.
--GVoice-Design-Spec.txt holds samples, for each GVoice record, of the relevant contained XML. As more are found, they will be added to the spec.
+  *GVoice-DB-Diagram.pdf is a pseudo-spec for the proposed SQLite database.
+  *GVoice-Design-Spec.txt holds samples, for each GVoice record, of the relevant contained XML. As more are found, they will be added to the spec.

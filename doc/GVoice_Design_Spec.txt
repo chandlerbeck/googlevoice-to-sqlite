@@ -1,0 +1,315 @@
+Placed text
+-----------
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Me to John Smith</title>
+</head>
+<body>
+	<div class="hChatLog hfeed">
+		<div class="message">
+			<abbr class="dt" title="2011-09-05T18:33:45.839Z">Sep 05, 2011 06:33:45 PM</abbr>:
+			<cite class="sender vcard">
+				<a class="tel" href="tel:+12223334444">
+					<abbr class="fn" title="Arithmo Maniac">Me</abbr>
+				</a>
+			</cite>:
+			<q>
+				Good morning! Hope summer was good.
+				<br>Do you know of a good coffee shop around here?
+				<br>Thanks. See you soon,
+				<br>Arithmo Maniac
+			</q>
+		</div>
+	</div>
+	<div class="tags">
+		Labels:
+		<a rel="tag" href="http://www.google.com/voice#sms">Text</a>
+	</div>
+</body>
+
+
+
+Recieved Text
+------------
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Arachno Maniac</title>
+</head>
+<body>
+	<div class="hChatLog hfeed">
+		<div class="message">
+			<abbr class="dt" title="2011-09-02T22:49:48.559Z">Sep 02, 2011 10:49:48 PM</abbr>:
+			<cite class="sender vcard">
+				<a class="tel" href="tel:+12223335678">
+					<span class="fn">Arachno Maniac</span>
+				</a>
+			</cite>:
+			<q>
+				You want some spiders?
+			</q>
+		</div>
+	</div>
+	<div class="tags">
+		Labels:
+		<a rel="tag" href="http://www.google.com/voice#inbox">Inbox</a>, 
+		<a rel="tag" href="http://www.google.com/voice#sms">Text</a>
+	</div>
+</body>
+
+
+Text Conversation
+----------
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Douglas Fergman</title>
+</head>
+<body>
+	<div class="hChatLog hfeed">
+		<div class="message">
+			<abbr class="dt" title="2011-09-02T20:44:25.845Z">Sep 02, 2011 08:44:25 PM</abbr>:
+			<cite class="sender vcard">
+				<a class="tel" href="tel:+12345556677">
+					<span class="fn">Douglas Fergman</span>
+				</a>
+			</cite>:
+			<q>Hey</q>
+		</div> 
+		<div class="message">
+			<abbr class="dt" title="2011-09-02T20:49:41.101Z">Sep 02, 2011 08:49:41 PM</abbr>:
+			<cite class="sender vcard">
+				<a class="tel" href="tel:+12223334444">
+					<abbr class="fn" title="Arithmo Maniac">Me</abbr>
+				</a>
+			</cite>:
+			<q>
+				Hi
+			</q>
+		</div> 
+		<div class="message">
+			<abbr class="dt" title="2011-09-02T20:50:17.778Z">Sep 02, 2011 08:50:17 PM</abbr>:
+			<cite class="sender vcard">
+				<a class="tel" href="tel:+12345556677">
+					<span class="fn">Douglas Fergman</span>
+				</a>
+			</cite>:
+			<q>
+				Wht up<br>
+			</q>
+		</div> 
+		<div class="message">
+			<cite class="sender vcard">
+				<a class="tel" href="tel:+12223334444">
+					<abbr class="fn" title="Arithmo Maniac">Me</abbr>
+				</a>
+			</cite>:
+			<cite class="sender vcard"><a class="tel" href="tel:+12223334444"><abbr class="fn" title="Arithmo Maniac">Me</abbr></a></cite>:
+			<q>
+				@ Starbucks righ now. Summer good. U?
+			</q>
+		</div> 
+		<div class="message">
+			<abbr class="dt" title="2011-09-02T21:04:14.304Z">Sep 02, 2011 09:04:14 PM</abbr>:
+			<cite class="sender vcard">
+				<a class="tel" href="tel:+12345556677">
+					<span class="fn">Douglas Fergman</span>
+				</a>
+			</cite>:
+				<q>
+					02/02:old geezers. 
+				</q>
+		</div> 
+		<div class="message">
+			<abbr class="dt" title="2011-09-02T21:04:14.404Z">Sep 02, 2011 09:04:14 PM</abbr>:
+			<cite class="sender vcard">
+				<a class="tel" href="tel:+12345556677">
+					<span class="fn">Douglas Fergman</span>
+				</a>
+			</cite>:
+				<q>
+					01/02:Awesome so far started skydiving yesterday & realized that I'm one of the oldest students today. So very weird to see so many new faces and none of the 
+				</q>
+		</div> 
+		<div class="message">
+			<cite class="sender vcard">
+				<a class="tel" href="tel:+12223334444">
+					<abbr class="fn" title="Arithmo Maniac">Me</abbr>
+				</a>
+			</cite>:
+				<q>
+					I know!
+				</q>
+		</div>
+	</div>
+	<div class="tags">
+		Labels:
+		<a rel="tag" href="http://www.google.com/voice#inbox">Inbox</a>,
+		<a rel="tag" href="http://www.google.com/voice#sms">Text</a>
+	</div>
+</body>
+
+Voicemail
+------------
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Voicemail from Arachno Maniac</title>
+</head>
+	<body>
+		<div class="haudio">
+			<span class="album">Call Log for Arithmo Maniac</span>
+			<span class="fn">Voicemail from Arachno Maniac</span>
+			<div class="contributor vcard">
+				Voicemail from
+				<a class="tel" href="tel:+12223335678">
+					<span class="fn">Arachno Maniac</span>
+				</a>
+			</div>
+		<abbr class="published" title="2011-09-04T22:52:00.000Z">Sep 04, 2011 10:52:00 PM</abbr>
+		Transcript:
+		<span class="description">
+			<span class="full-text">
+				Hi there. It&#39;s, Arachno. Just wondering what you&#39;re doing, if you could call me if I can leave me a message. I&#39;ll be how you doing eating that spider. It was like laptop. I want you to just save me one. I&#39;d like to talk to you soon, okay. Thank you.
+			</span>
+			<span class="word high"><span class="confidence">0.9587148</span></span>
+			<span class="word med"><span class="confidence">0.66008866</span></span>
+			<span class="word med"><span class="confidence">0.759305</span></span>
+			<span class="word med"><span class="confidence">0.7954767</span></span>
+			<span class="word low"><span class="confidence">0.19262947</span></span>
+			<span class="word high"><span class="confidence">0.9443444</span></span>
+			<span class="word med"><span class="confidence">0.7155803</span></span>
+			<span class="word med"><span class="confidence">0.639364</span></span>
+			<span class="word high"><span class="confidence">0.8530117</span></span>
+			<span class="word low"><span class="confidence">0.37927806</span></span>
+			<span class="word med"><span class="confidence">0.7349438</span></span>
+			<span class="word med"><span class="confidence">0.7800655</span></span>
+			<span class="word high"><span class="confidence">0.8996153</span></span>
+			<span class="word high"><span class="confidence">0.83842874</span></span>
+			<span class="word low"><span class="confidence">0.41804448</span></span>
+			<span class="word low"><span class="confidence">0.36264384</span></span>
+			<span class="word low"><span class="confidence">0.40974945</span></span>
+			<span class="word low"><span class="confidence">0.40987948</span></span>
+			<span class="word low"><span class="confidence">0.2998455</span></span>
+			<span class="word med"><span class="confidence">0.62892604</span></span>
+			<span class="word high"><span class="confidence">0.9553442</span></span>
+			<span class="word low"><span class="confidence">0.13825977</span></span>
+			<span class="word low"><span class="confidence">0.17463404</span></span>
+			<span class="word low"><span class="confidence">0.39956447</span></span>
+			<span class="word high"><span class="confidence">0.8639471</span></span>
+			<span class="word high"><span class="confidence">0.8658889</span></span>
+			<span class="word low"><span class="confidence">0.4166986</span></span>
+			<span class="word low"><span class="confidence">0.3590871</span></span>
+			<span class="word low"><span class="confidence">0.30156788</span></span>
+			<span class="word low"><span class="confidence">0.18052793</span></span>
+			<span class="word low"><span class="confidence">0.22347386</span></span>
+			<span class="word med"><span class="confidence">0.64470845</span></span>
+			<span class="word low"><span class="confidence">0.48603696</span></span>
+			<span class="word low"><span class="confidence">0.46679226</span></span>
+			<span class="word low"><span class="confidence">0.255341</span></span>
+			<span class="word low"><span class="confidence">0.46433583</span></span>
+			<span class="word low"><span class="confidence">0.29297194</span></span>
+			<span class="word low"><span class="confidence">0.39814994</span></span>
+			<span class="word low"><span class="confidence">0.36680874</span></span>
+			<span class="word low"><span class="confidence">0.3490852</span></span>
+			<span class="word high"><span class="confidence">0.89765006</span></span>
+			<span class="word high"><span class="confidence">0.8504058</span></span>
+			<span class="word med"><span class="confidence">0.6206428</span></span>
+			<span class="word high"><span class="confidence">0.8590443</span></span>
+			<span class="word med"><span class="confidence">0.78410083</span></span>
+			<span class="word high"><span class="confidence">0.87592643</span></span>
+			<span class="word high"><span class="confidence">0.88274604</span></span>
+			<span class="word high"><span class="confidence">0.8889683</span></span>
+			<span class="word high"><span class="confidence">0.9667561</span></span>
+			<span class="word high"><span class="confidence">0.89337</span></span>
+			<span class="word high"><span class="confidence">0.962036</span></span>
+	</span>
+	<audio controls="controls" src="Arachno Maniac - 2011-09-04T22-52-00Z.mp3">
+		<a rel="enclosure" href="Arachno Maniac - 2011-09-04T22-52-00Z.mp3">Audio</a>
+	</audio>
+	<abbr class="duration" title="PT17S">(00:00:17)</abbr>
+	<div class="tags">Labels:
+		<a rel="tag" href="http://www.google.com/voice#inbox">Inbox</a>,
+		<a rel="tag" href="http://www.google.com/voice#voicemail">Voicemail</a>
+	</div>
+	</div>
+</body>
+
+
+Recorded (Recieved) Call
+-------------
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>
+		Recorded call with Biblio Maniac
+	</title>
+</head>
+<body>
+	<div class="haudio">
+		<span class="album">Call Log for Arithmo Maniac</span>
+		<span class="fn">Recorded call with Biblio Maniac</span>
+		<div class="contributor vcard">Recorded call with
+			<a class="tel" href="tel:+12229875678">
+				<span class="fn">Biblio Maniac</span>
+			</a>
+		</div>
+		<abbr class="published" title="2010-12-01T22:38:24.052Z">Dec 01, 2010 10:38:24 PM</abbr>
+		<audio controls="controls" src="Biblio Maniac - 2010-12-01T22-38-24Z.mp3">
+			<a rel="enclosure" href="Biblio Maniac - 2010-12-01T22-38-24Z.mp3">Audio</a>
+		</audio>
+		<abbr class="duration" title="PT6M14S">(00:06:14)</abbr>
+		<div class="tags">Labels:
+			<a rel="tag" href="http://www.google.com/voice#inbox">Inbox</a>,
+			<a rel="tag" href="http://www.google.com/voice#recorded">Recorded</a>
+		</div>
+	</div>
+</body>
+
+
+Recieved Call
+-------------
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Received call from Biblio Maniac</title>
+</head>
+<body>
+	<div class="haudio">
+		<span class="album">Call Log for Arithmo Maniac</span>
+		<span class="fn">Received call from Biblio Maniac</span>
+		<div class="contributor vcard">
+			Received call from 
+			<a class="tel" href="tel:+12229875678">
+				<span class="fn">Biblio Maniac</span>
+			</a>
+		</div>
+		<abbr class="published" title="2010-12-01T22:32:05.000Z">Dec 01, 2010 10:32:05 PM</abbr>
+		<abbr class="duration" title="PT6M10S">(00:06:10)</abbr>
+		<div class="tags">
+			Labels:
+			<a rel="tag" href="http://www.google.com/voice#received">Received</a>
+		</div>
+	</div>
+</body>
+
+
+Placed Call
+------------
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Placed call to Necro Maniac</title>
+</head>
+<body>
+	<div class="haudio">
+		<span class="album">Call Log for Arithmo Maniac</span>
+		<span class="fn">Placed call to Necro Maniac</span>
+		<div class="contributor vcard">
+			Placed call to
+			<a class="tel" href="tel:+12229988776">
+				<span class="fn">Necro Maniac</span>
+			</a>
+		</div>
+		<abbr class="published" title="2011-09-02T20:51:02.000Z">Sep 02, 2011 08:51:02 PM</abbr>
+		<abbr class="duration" title="PT11M25S">(00:11:25)</abbr>
+		<div class="tags">
+			Labels:
+			<a rel="tag" href="http://www.google.com/voice#placed">Placed</a>
+		</div>
+	</div>
+</body>

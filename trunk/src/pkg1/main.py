@@ -33,7 +33,7 @@ def dumpall(generator):
 
 if __name__ == '__main__':
     conn = gvoice_sql.wipeconnect('C:\Users\AviLevin\Downloads\gvoice.sqlite')
-    with open('C:\Users\AviLevin\Desktop\initdb.sql', 'r') as initdb:
+    with open('initdb.sql', 'r') as initdb:
         conn.executescript(initdb.read())
     for i in getobjs('C:\Users\AviLevin\Downloads\conversations'):
         #print i.dump();

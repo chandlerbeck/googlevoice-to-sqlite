@@ -1,16 +1,30 @@
+'''
+gvoice_parse.py
+
+A parsing library for GoogleVoice html files. Has no dependencies to other files in project
+(Though the <br> fix is not automatically done here)
+
+
+@author: AviLevin
+'''
+
 import re
 import datetime
 import copy
 
+#the classes of GVoice objects
+
+#Contacts
 class Contact:
     def __init__(self):
         self.phonenumber = None
         self.name = None
-    def dump(self):
+    def dump(self): #debug info
         return "%s (%s)" % (self.name, self.phonenumber)
-    def test(self):
+    def test(self): #if has values
         return self.phonenumber != None or self.name != None  
     
+#Text message
 class Text:
     def __init__(self):
         self.contact = Contact()
@@ -19,6 +33,7 @@ class Text:
     def dump(self):
         return "%s; %s; \"%s\"" % (self.contact.dump(), self.date, self.text)
 
+#Text "conversation"; the outer container for grouped texts (they are stored in HTML this way, too)
 class TextConversation:
     def __init__(self):
         self.contact = Contact()
@@ -29,35 +44,38 @@ class TextConversation:
             returnstring += "\n\t%s" % i.dump()
         return returnstring
 
+#A phone call
 class Call:
     def __init__(self):
         self.contact = Contact()
         self.date = None
         self.duration = None
-        self.calltype = None
+        self.calltype = None #Missed, Placed, Received
     def dump(self):
         return "%s\n%s; %s(%s)" % (self.calltype, self.contact.dump(), self.date, self.duration)
 
 class Audio:
     def __init__(self):
         self.contact = Contact()
-        self.audiotype = None
+        self.audiotype = None   #'Voicemail' or 'Recorded'
         self.date = None
         self.duration = None
-        self.text = None
-        self.confidence = None
-        self.filename = None
+        self.text = None        #the text of the recording/voicemail
+        self.confidence = None  #confidence of prediction
+        self.filename = None    #filename of audio file
     def dump(self):
         return "%s\n%s; %s(%s); [%s]%s" % (self.audiotype, self.contact.dump(), self.date, self.duration, self.confidence, self.text)
-##-------------
+##---------------------------
 
-def parseDate (datestring):
+#Parsing help functions
+
+#Parses a Gvoice-formatted date into a datetime object
+def parse_date (datestring):
     #what does pattern really mean>
-    #print datestring
-    parseddate = datetime.datetime.strptime(datestring, '%Y-%m-%dT%H:%M:%S.%fZ')
-    return parseddate
+    return datetime.datetime.strptime(datestring, '%Y-%m-%dT%H:%M:%S.%fZ')
 
-def parseTime (timestring):
+#Parses the "duration" tag into the number of seconds it encodes
+def parse_time (timestring):
     #what does real pattern really mean
     timestringmatch = re.search('(\d\d+):(\d\d):(\d\d)', timestring)
     seconds = 0
@@ -66,109 +84,116 @@ def parseTime (timestring):
     seconds += int(timestringmatch.group(1)) * 3600
     return seconds
 
-def asXHTML (path):
-    #returnvalue = path
-    returnvalue = re.sub('/(?=\w)', '/{http://www.w3.org/1999/xhtml}', path)
-    #print returnvalue
-    return returnvalue
-
+#As the HTML has an XML namespace, it would need to be specified for every XPATH node. This automates that obnoxious step
+def as_xhtml (path):
+    return re.sub('/(?=\w)', '/{http://www.w3.org/1999/xhtml}', path)
 ##------------------------------------
 
-def getLabel(node):
-    labelNodes = node.findall(asXHTML('./div[@class="tags"]/a[@rel="tag"]'))
-    validtags = ['Placed', 'Received', 'Missed', 'Recorded', 'Voicemail']
+
+#Gets a category label from the HTNL file
+#TO DO: return Inbox, Starred flags
+def get_label(node):
+    labelNodes = node.findall(as_xhtml('./div[@class="tags"]/a[@rel="tag"]'))
+    validtags = ('Placed', 'Received', 'Missed', 'Recorded', 'Voicemail') #Valid categories
     for i in labelNodes:
         label = i.findtext('.')
         if label in validtags:
             return label
     return None
 
-def findContact(node):
-    content_obj = Contact()
-    contactnode = node.find(asXHTML('.//cite[@class="sender vcard"]/a[@class="tel"]'))
+#Finds the first contact contained within a node. Returns it
+def find_Contact(node):
+    contact_obj = Contact()
+    
+    #two places the node could be
+    contactnode = node.find(as_xhtml('.//cite[@class="sender vcard"]/a[@class="tel"]'))
     if contactnode is None:
-        contactnode = node.find(asXHTML('.//div[@class="contributor vcard"]/a[@class="tel"]'))
+        contactnode = node.find(as_xhtml('.//div[@class="contributor vcard"]/a[@class="tel"]'))
+    
     #name
-    content_obj.name = contactnode.findtext(asXHTML('./span[@class="fn"]'))
-    if content_obj.name != None and len(content_obj.name) == 0:
-        content_obj.name = None
+    contact_obj.name = contactnode.findtext(as_xhtml('./span[@class="fn"]'))
+    if contact_obj.name != None and len(contact_obj.name) == 0: #If a blank string. Should be an isinstance
+        contact_obj.name = None
     #phone number
     contactphonenumber = re.search('\d+', contactnode.attrib['href'])
     if contactphonenumber != None:
-        content_obj.phonenumber = contactphonenumber.group(0)
-    return content_obj
+        contact_obj.phonenumber = contactphonenumber.group(0)
+        
+    return contact_obj
 
-def processTextMsgs(textNodes, oneWayName):
+def process_TextConversation(textnodes, onewayname): #a list of texts, and the title used in special cases
     text_collection = TextConversation()
     text_collection.texts = []
-    #print oneWayName
-    #print '---------------------'
-    for i in textNodes:
+    for i in textnodes:
         textmsg = Text()
-        textmsg.contact = findContact(i)
-        if textmsg.contact == None:
-                print 'Oops!'
-                break
-        if text_collection.contact.test() == False:
-                if textmsg.contact.name != None:
-                    text_collection.contact = copy.deepcopy(textmsg.contact)
-        textmsg.date = parseDate(i.find(asXHTML('./abbr[@class="dt"]')).attrib["title"])
-        #text
-        textmsg.text = i.findtext(asXHTML('./q')) #to do: html decoder
+        textmsg.contact = find_Contact(i)
+        if text_collection.contact.test() == False: #if we don't have a contact for this conversation yet
+                if textmsg.contact.name != None:    #if contact not self
+                    text_collection.contact = copy.deepcopy(textmsg.contact)    #They are other participant
+        textmsg.date = parse_date(i.find(as_xhtml('./abbr[@class="dt"]')).attrib["title"]) #date
+        textmsg.text = i.findtext(as_xhtml('./q')) #Text. TO DO: html decoder
         text_collection.texts.append(copy.deepcopy(textmsg))
         #newline
-    if not text_collection.contact.test():
-        text_collection.contact.name = oneWayName
+    if not text_collection.contact.test():  #Outgoing-only conversations don't contain the recipient's contact info.
+        text_collection.contact.name = onewayname #Pull fron title. No phone number, but fixed in other finction
     return text_collection
 
-def processCall(audioNode):
+#process phone calls. Returns Call object
+def process_Call(audionode):
     call_obj = Call()
-    call_obj.contact = findContact(audioNode)
+    call_obj.contact = find_Contact(audionode)
     #time
-    call_obj.date = parseDate(audioNode.find(asXHTML('./abbr[@class="published"]')).attrib["title"])
-    durationNode = audioNode.findtext(asXHTML('./abbr[@class="duration"]'))
-    if durationNode != None:
-        #duration
-        call_obj.duration = parseTime(durationNode)
-    call_obj.calltype = getLabel(audioNode)
+    call_obj.date = parse_date(audionode.find(as_xhtml('./abbr[@class="published"]')).attrib["title"])
+    #duration
+    duration_node = audionode.findtext(as_xhtml('./abbr[@class="duration"]'))
+    if duration_node != None:
+        call_obj.duration = parse_time(duration_node)
+    #Call type (Missed, Recieved, Placed)
+    call_obj.calltype = get_label(audionode)
     return call_obj
 
-def processAudio(audioNode):
+#Processes voicemails, recordings
+def process_Audio(audionode):
     audio_obj = Audio()
-    audio_obj.contact = findContact(audioNode)
+    audio_obj.contact = find_Contact(audionode)
     #time
     #duration
-    audio_obj.duration = parseTime(audioNode.findtext(asXHTML('./abbr[@class="duration"]')))
-    audio_obj.date = parseDate(audioNode.find(asXHTML('./abbr[@class="published"]')).attrib["title"]) - datetime.timedelta(0, audio_obj.duration)
+    audio_obj.duration = parse_time(audionode.findtext(as_xhtml('./abbr[@class="duration"]')))
+    audio_obj.date = parse_date(audionode.find(as_xhtml('./abbr[@class="published"]')).attrib["title"]) - datetime.timedelta(0, audio_obj.duration)
     #print audio_obj.date
     #print audio_obj.duration
-    descriptionNode = audioNode.find(asXHTML('./span[@class="description"]'))
-    if descriptionNode != None and len(descriptionNode.findtext(asXHTML('./span[@class="full-text"]'))) > 0:
+    descriptionNode = audionode.find(as_xhtml('./span[@class="description"]'))
+    if descriptionNode != None and len(descriptionNode.findtext(as_xhtml('./span[@class="full-text"]'))) > 0:
         #fullText
-        fullText = descriptionNode.findtext(asXHTML('./span[@class="full-text"]')) #to do: html decoder
+        fullText = descriptionNode.findtext(as_xhtml('./span[@class="full-text"]')) #TO DO: html decoder
         if fullText != 'Unable to transcribe this message.':
             audio_obj.text = fullText
-        #average confidence
-        confidenceValues = descriptionNode.findall(asXHTML('./span/span[@class="confidence"]'))
-        totalConfid = 0
-        for i in confidenceValues:
-            totalConfid += float(i.findtext('.'))
-        audio_obj.confidence = totalConfid / len(confidenceValues)
-    #audio file
-    audio_obj.filename = audioNode.find(asXHTML('./audio')).attrib["src"]    
-    audio_obj.audiotype = getLabel(audioNode)
+        #average confidence - read each confidence node (word) and average out results
+        confidence_values = descriptionNode.findall(as_xhtml('./span/span[@class="confidence"]'))
+        totalconfid = 0
+        for i in confidence_values:
+            totalconfid += float(i.findtext('.'))
+        audio_obj.confidence = totalconfid / len(confidence_values)
+    #location of audio file
+    audio_obj.filename = audionode.find(as_xhtml('./audio')).attrib["src"]    
+    #label
+    audio_obj.audiotype = get_label(audionode)
     return audio_obj
 
 ##-------------------
 
+#The main function. Takes in the file name and an ElementTree
 def process_file(tree, filename = None):
-    textNodes = tree.findall(asXHTML('.//div[@class="hChatLog hfeed"]/div[@class="message"]'))
-    if len(textNodes) > 0:
-        obj = processTextMsgs(textNodes, re.match('(.*?)(?= - \d\d\d\d-\d\d-\d\dT\d\d-\d\d-\d\dZ)', filename).group(0))
+    #texts
+    textNodes = tree.findall(as_xhtml('.//div[@class="hChatLog hfeed"]/div[@class="message"]'))
+    if len(textNodes) > 0: #is actually a text file
+        #process the text files
+        obj = process_TextConversation(textNodes, re.match('(.*?)(?= - \d\d\d\d-\d\d-\d\dT\d\d-\d\d-\d\dZ)', filename).group(0))
     else:
-        audioNode = tree.find(asXHTML('.//div[@class="haudio"]'))
-        if audioNode.find(asXHTML('./audio')) is None: #Not actual call
-            obj = processCall(audioNode)
-        else:
-            obj = processAudio(audioNode)
+        #look for call/audio
+        audioNode = tree.find(as_xhtml('.//div[@class="haudio"]'))
+        if audioNode.find(as_xhtml('./audio')) is None: #no audio enclosure. Just the call record
+            obj = process_Call(audioNode)
+        else: #audio
+            obj = process_Audio(audioNode)
     return obj

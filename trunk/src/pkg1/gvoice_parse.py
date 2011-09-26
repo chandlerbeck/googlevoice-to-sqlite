@@ -10,12 +10,13 @@ A parsing library for GoogleVoice html files. Has no dependencies to other files
 
 import re
 import datetime
-import copy
+from copy import deepcopy
 
 #the classes of GVoice objects
 
 #Contacts
 class Contact:
+    __slots__ = ['name', 'phonenumber']
     def __init__(self):
         self.phonenumber = None
         self.name = None
@@ -26,6 +27,7 @@ class Contact:
     
 #Text message
 class Text:
+    __slots__ = ['contact', 'date', 'text']
     def __init__(self):
         self.contact = Contact()
         self.date = None
@@ -35,6 +37,7 @@ class Text:
 
 #Text "conversation"; the outer container for grouped texts (they are stored in HTML this way, too)
 class TextConversation:
+    __slots__ = ['contact', 'texts']
     def __init__(self):
         self.contact = Contact()
         self.texts = []
@@ -46,6 +49,7 @@ class TextConversation:
 
 #A phone call
 class Call:
+    __slots__ = ['contact', 'date', 'duration', 'calltype']
     def __init__(self):
         self.contact = Contact()
         self.date = None
@@ -55,6 +59,7 @@ class Call:
         return "%s\n%s; %s(%s)" % (self.calltype, self.contact.dump(), self.date, self.duration)
 
 class Audio:
+    __slots__ = ['contact', 'audiotype', 'date', 'duration', 'text', 'confidence', 'filename']
     def __init__(self):
         self.contact = Contact()
         self.audiotype = None   #'Voicemail' or 'Recorded'
@@ -129,10 +134,10 @@ def process_TextConversation(textnodes, onewayname): #a list of texts, and the t
         textmsg.contact = find_Contact(i)
         if text_collection.contact.test() == False: #if we don't have a contact for this conversation yet
                 if textmsg.contact.name != None:    #if contact not self
-                    text_collection.contact = copy.deepcopy(textmsg.contact)    #They are other participant
+                    text_collection.contact = deepcopy(textmsg.contact)    #They are other participant
         textmsg.date = parse_date(i.find(as_xhtml('./abbr[@class="dt"]')).attrib["title"]) #date
         textmsg.text = i.findtext(as_xhtml('./q')) #Text. TO DO: html decoder
-        text_collection.texts.append(copy.deepcopy(textmsg))
+        text_collection.texts.append(deepcopy(textmsg))
         #newline
     if not text_collection.contact.test():  #Outgoing-only conversations don't contain the recipient's contact info.
         text_collection.contact.name = onewayname #Pull fron title. No phone number, but fixed in other finction

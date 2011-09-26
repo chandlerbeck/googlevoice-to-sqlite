@@ -59,3 +59,74 @@ CREATE TABLE Audio (
     Confidence  NUMERIC,
 	FileName	TEXT
 );
+
+-- View: flatTextMessage
+CREATE VIEW flatTextMessage AS
+       SELECT TM.TextMessageID,
+              TM.TextConversationID,
+              C.ContactID,
+              C.Name,
+              C.PhoneNumber,
+              TM.Incoming,
+              TM.TimeRecorded,
+              TM.Text
+         FROM Contact AS C
+              INNER JOIN TextConversation AS TC
+                      ON C.ContactID = TC.ContactID
+              INNER JOIN TextMessage AS TM
+                      ON TC.TextConversationID = TM.TextConversationID
+        ORDER BY TM.TimeRecorded;
+;
+
+-- View: flatPhoneCall
+CREATE VIEW flatPhoneCall AS
+       SELECT PC.PhoneCallID,
+              C.ContactID,
+              C.Name,
+              C.PhoneNumber,
+              PCT.PhoneCallType,
+              PC.TimeStarted,
+              PC.Duration
+         FROM Contact AS C
+              INNER JOIN PhoneCall AS PC
+                      ON C.ContactID = PC.ContactID
+              INNER JOIN PhoneCallType AS PCT
+                      ON PCT.PhoneCallTypeID = PC.PhoneCallTypeID
+        ORDER BY PC.TimeStarted;
+;
+
+-- View: flatVoicemail
+CREATE VIEW flatVoicemail AS
+       SELECT V.VoicemailID,
+              C.ContactID,
+              C.Name,
+              C.PhoneNumber,
+              A.TimeStarted,
+              A.Duration,
+              A.Text,
+              A.Confidence,
+              A.FileName
+         FROM Contact AS C
+              INNER JOIN Voicemail AS V
+                      ON C.ContactID = V.ContactID
+              INNER JOIN Audio AS A
+                      ON A.VoicemailID = V.VoicemailID
+        ORDER BY A.TimeStarted;
+;
+
+-- View: flatRecording
+CREATE VIEW flatRecording AS
+       SELECT PC.PhoneCallID,
+              C.ContactID,
+              C.Name,
+              C.PhoneNumber,
+              A.TimeStarted,
+              A.Duration,
+              A.FileName
+         FROM Contact AS C
+              INNER JOIN PhoneCall AS PC
+                      ON C.ContactID = PC.ContactID
+              INNER JOIN Audio AS A
+                      ON A.PhoneCallID = PC.PhoneCallID
+        ORDER BY A.TimeStarted;
+;

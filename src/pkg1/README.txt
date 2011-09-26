@@ -1,7 +1,7 @@
 README
 ----------------
 gvoice-to-sqlite 
-1.0 (2011-09-20)
+2.0 (2011-09-26)
 (c) Arithmomaniac (arithmomaniac@hotmail.com) under LGPL2/GPL2.1/MPL1.1 tri-license
 -------------
 The gvoice-to-sqlite script takes the Google Voice records you can get from Google Takeout one step further - instead of thousands of tiny files, it produces a SQLite database that you can use to make lists (of past texts within a year, for example) and analyses (such as the people you talk to the most).
@@ -26,16 +26,33 @@ To use this script:
 5) 	The results are stored in .\gvoice.sqlite. A database diagram exists on the project homepage.
 	If you want to save this database, copy it out of the directory. Due to limitations in Google's contact persistence, the entire database is rewritten every time.
 
-If you need a SQLite client, try SQLite Studio (Windows) or SQLite Manager (Firefox). If you would like to import the data into Excel, Oracle, SQL Server, etc on Windows, use this OLDB file.
+If you need a SQLite client, try SQLite Studio (Windows) or SQLite Manager (Firefox). If you would like to import the data into Excel, Oracle, SQL Server, etc on Windows, use OLDEB.
 
 --------------
 
+Changelog:
+
+2.0 (2011-09-26)
+	CSV exports and SQL views
+	Better file-input name handling
+	Performance enhancements - up to 80% faster
+1.0 (2011-09-20)
+
+----------------
+
 Future Features (in order of priority):
 
-Create views inside the output SQL database
-Implement exporting to CSV
+Package as EXE
 Decode the special characters (like '&amp;') inside text messages
-Keep track of primary key increments inside the script, rather than through repeated DB calls
-Make pairing call recordings with phone calls more robust
-Optimize matching of null-phone-number contacts to known equivalents
-Make gvoice_sql.gvoiceconn inherit the sqlite connection class
+Simplify the progress display
+
+----------------
+
+Performance Notes
+
+Since several thousand objects are created during execution, this script can take a while to run. here's an approximate performance breakdown for the main routine.
+
+10% - File Reading
+50% - XML tree creation
+30% - Object parsing/creation
+10% - Database insertion/processing

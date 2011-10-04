@@ -11,6 +11,7 @@ A parsing library for GoogleVoice html files. Has no dependencies to other files
 import re
 import datetime
 from copy import deepcopy
+import htmlentitydefs
 
 #the classes of GVoice objects
 
@@ -74,6 +75,28 @@ class Audio:
 
 #Parsing help functions
 
+#from effbot.org. HTML unescape
+def unescape(text):
+    def fixup(m):
+        text = m.group(0)
+        if text[:2] == "&#":
+            # character reference
+            try:
+                if text[:3] == "&#x":
+                    return unichr(int(text[3:-1], 16))
+                else:
+                    return unichr(int(text[2:-1]))
+            except ValueError:
+                pass
+        else:
+            # named entity
+            try:
+                text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
+            except KeyError:
+                pass
+        return text # leave as is
+    return re.sub("&#?\w+;", fixup, text)
+
 #Parses a Gvoice-formatted date into a datetime object
 def parse_date (datestring):
     #what does pattern really mean>
@@ -136,7 +159,7 @@ def process_TextConversation(textnodes, onewayname): #a list of texts, and the t
                 if textmsg.contact.name != None:    #if contact not self
                     text_collection.contact = deepcopy(textmsg.contact)    #They are other participant
         textmsg.date = parse_date(i.find(as_xhtml('./abbr[@class="dt"]')).attrib["title"]) #date
-        textmsg.text = i.findtext(as_xhtml('./q')) #Text. TO DO: html decoder
+        textmsg.text = unescape(i.findtext(as_xhtml('./q'))) #Text. TO DO: html decoder
         text_collection.texts.append(deepcopy(textmsg))
         #newline
     if not text_collection.contact.test():  #Outgoing-only conversations don't contain the recipient's contact info.

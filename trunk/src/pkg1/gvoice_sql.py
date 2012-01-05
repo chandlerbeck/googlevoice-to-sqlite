@@ -48,7 +48,7 @@ class gvoiceconn(sqlite3.Connection):
         self.execute('INSERT INTO TextConversation (TextConversationID, ContactID) VALUES (?, ?)', (conversationid, contactid))
         for textmsg in text_conversation.texts:
             #insert each text Message into the TextMessage database
-            self.execute ('INSERT INTO TextMessage (TextMessageID, TextConversationID, TimeRecorded, Incoming, Text) VALUES (?, ?, ?, ?, ?)', (
+            self.execute ('INSERT INTO TextMessage (TextMessageID, TextConversationID, TimeRecordedUTC, Incoming, Text) VALUES (?, ?, ?, ?, ?)', (
                           self.getmaxid('TextMessage'),
                           conversationid,
                           textmsg.date,
@@ -58,15 +58,21 @@ class gvoiceconn(sqlite3.Connection):
      
     #Import a Call object into the database
     def import_Call(self, callrecord):
-        contactid = self.import_Contact(callrecord.contact)
-        self.execute('INSERT INTO PhoneCall (PhoneCallID, ContactID, PhoneCallTypeID, TimeStarted, Duration) VALUES (?, ?, ?, ?, ?)', (
-                          self.getmaxid('PhoneCall'),
-                          contactid,
-                            #Proper type as defined in PhoneCallTypeID
-                          self.execute('SELECT PhoneCallTypeID FROM PhoneCallType WHERE PhoneCallType = "%s"' % callrecord.calltype).fetchone()[0],
-                          callrecord.date,
-                          callrecord.duration
-                    ))
+        try:
+            contactid = self.import_Contact(callrecord.contact)
+            self.execute('INSERT INTO PhoneCall (PhoneCallID, ContactID, PhoneCallTypeID, TimeStartedUTC, Duration) VALUES (?, ?, ?, ?, ?)', (
+                            self.getmaxid('PhoneCall'),
+                            contactid,
+                                #Proper type as defined in PhoneCallTypeID
+                            self.execute('SELECT PhoneCallTypeID FROM PhoneCallType WHERE PhoneCallType = "%s"' % callrecord.calltype).fetchone()[0],
+                            callrecord.date,
+                            callrecord.duration
+                        ))
+        except:
+            if callrecord.contact.name == 'Google Voice': #Intro go Google Voice - voicemail with no audio
+                pass
+            else:
+                raise
     
     #imports Audio object into database
     def import_Audio(self, audiorecord, insert_unmatched_audio = True):
@@ -79,7 +85,7 @@ class gvoiceconn(sqlite3.Connection):
             self.execute('INSERT INTO Voicemail (VoicemailID, ContactID) VALUES (?, ?)', (voicemailid, contactid))
         else: #Guess what Call the recording is associated with. If exists, insert
             callidrow = self.execute(
-                'select PhoneCallID from PhoneCall WHERE ContactID = ? and strftime("%s", ?) - strftime("%s", TimeStarted) between 0 and Duration', 
+                'select PhoneCallID from PhoneCall WHERE ContactID = ? and strftime("%s", ?) - strftime("%s", TimeStartedUTC) between 0 and Duration', 
                 (contactid, audiorecord.date)                
                 )
             if callidrow == None:
@@ -90,7 +96,7 @@ class gvoiceconn(sqlite3.Connection):
                 callid = callidrow.fetchone()[0]
         #Now that have foreign keys, insert audio into db
         self.execute(
-            'INSERT INTO Audio (AudioID, PhoneCallID, VoicemailID, TimeStarted, Duration, Text, Confidence, FileName) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', (
+            'INSERT INTO Audio (AudioID, PhoneCallID, VoicemailID, TimeStartedUTC, Duration, Text, Confidence, FileName) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', (
              self.getmaxid('Audio'),
              callid,
              voicemailid,

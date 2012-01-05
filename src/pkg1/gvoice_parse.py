@@ -100,7 +100,7 @@ def unescape(text):
 #Parses a Gvoice-formatted date into a datetime object
 def parse_date (datestring):
     #what does pattern really mean>
-    return datetime.datetime.strptime(datestring, '%Y-%m-%dT%H:%M:%S.%fZ')
+    return datetime.datetime.strptime(datestring, '%Y-%m-%dT%H:%M:%S.%fZ') #C:\Users\AviLevin\Downloads\conversations
 
 #Parses the "duration" tag into the number of seconds it encodes
 def parse_time (timestring):

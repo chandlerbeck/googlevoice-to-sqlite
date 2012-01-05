@@ -17,7 +17,7 @@ CREATE TABLE TextConversation (
 CREATE TABLE TextMessage ( 
     TextMessageID INTEGER PRIMARY KEY ASC,
 	TextConversationID INTEGER NOT NULL REFERENCES TextConversation (TextConversationID),
-	TimeRecorded  timestamp,
+	TimeRecordedUTC  timestamp,
     Incoming      INTEGER NOT NULL,
     Text          TEXT    NOT NULL 
 );
@@ -38,7 +38,7 @@ CREATE TABLE PhoneCall (
 	ContactID	   INTEGER REFERENCES Contact ( ContactID ),	
 	PhoneCallTypeID INTEGER NOT NULL
 			   REFERENCES PhoneCallType ( PhoneCallTypeID ) ,
-	TimeStarted timestamp NOT NULL,
+	TimeStartedUTC timestamp NOT NULL,
     Duration   INTEGER
 );
 
@@ -53,7 +53,7 @@ CREATE TABLE Audio (
     AudioID     INTEGER PRIMARY KEY ASC,
     PhoneCallID INTEGER REFERENCES PhoneCall ( PhoneCallID ),
     VoicemailID INTEGER REFERENCES Voicemail ( VoicemailID ),
-	TimeStarted timestamp NOT NULL,
+	TimeStartedUTC timestamp NOT NULL,
     Duration    INTEGER,
     Text        TEXT,
     Confidence  NUMERIC,
@@ -68,14 +68,14 @@ CREATE VIEW flatTextMessage AS
               C.Name,
               C.PhoneNumber,
               TM.Incoming,
-              TM.TimeRecorded,
+              TM.TimeRecordedUTC,
               TM.Text
          FROM Contact AS C
               INNER JOIN TextConversation AS TC
                       ON C.ContactID = TC.ContactID
               INNER JOIN TextMessage AS TM
                       ON TC.TextConversationID = TM.TextConversationID
-        ORDER BY TM.TimeRecorded;
+        ORDER BY TM.TimeRecordedUTC;
 ;
 
 -- View: flatPhoneCall
@@ -85,14 +85,14 @@ CREATE VIEW flatPhoneCall AS
               C.Name,
               C.PhoneNumber,
               PCT.PhoneCallType,
-              PC.TimeStarted,
+              PC.TimeStartedUTC,
               PC.Duration
          FROM Contact AS C
               INNER JOIN PhoneCall AS PC
                       ON C.ContactID = PC.ContactID
               INNER JOIN PhoneCallType AS PCT
                       ON PCT.PhoneCallTypeID = PC.PhoneCallTypeID
-        ORDER BY PC.TimeStarted;
+        ORDER BY PC.TimeStartedUTC;
 ;
 
 -- View: flatVoicemail
@@ -101,7 +101,7 @@ CREATE VIEW flatVoicemail AS
               C.ContactID,
               C.Name,
               C.PhoneNumber,
-              A.TimeStarted,
+              A.TimeStartedUTC,
               A.Duration,
               A.Text,
               A.Confidence,
@@ -111,7 +111,7 @@ CREATE VIEW flatVoicemail AS
                       ON C.ContactID = V.ContactID
               INNER JOIN Audio AS A
                       ON A.VoicemailID = V.VoicemailID
-        ORDER BY A.TimeStarted;
+        ORDER BY A.TimeStartedUTC;
 ;
 
 -- View: flatRecording
@@ -120,7 +120,7 @@ CREATE VIEW flatRecording AS
               C.ContactID,
               C.Name,
               C.PhoneNumber,
-              A.TimeStarted,
+              A.TimeStartedUTC,
               A.Duration,
               A.FileName
          FROM Contact AS C
@@ -128,5 +128,5 @@ CREATE VIEW flatRecording AS
                       ON C.ContactID = PC.ContactID
               INNER JOIN Audio AS A
                       ON A.PhoneCallID = PC.PhoneCallID
-        ORDER BY A.TimeStarted;
+        ORDER BY A.TimeStartedUTC;
 ;

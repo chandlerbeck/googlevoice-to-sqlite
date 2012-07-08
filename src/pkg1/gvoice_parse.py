@@ -11,6 +11,8 @@ A parsing library for GoogleVoice html files. Has no dependencies to other files
 import re
 import datetime
 from copy import deepcopy
+from dateutil import tz
+from dateutil.parser import *
 import htmlentitydefs
 
 #the classes of GVoice objects
@@ -99,9 +101,10 @@ def unescape(text):
 
 #Parses a Gvoice-formatted date into a datetime object
 def parse_date (datestring):
-    #what does pattern really mean>
-    return datetime.datetime.strptime(datestring, '%Y-%m-%dT%H:%M:%S.%fZ') #C:\Users\AviLevin\Downloads\conversations
-
+    returntime = parse(datestring).astimezone(tz.tzutc())
+    return returntime.replace(tzinfo = None)
+	
+	
 #Parses the "duration" tag into the number of seconds it encodes
 def parse_time (timestring):
     #what does real pattern really mean
@@ -158,7 +161,8 @@ def process_TextConversation(textnodes, onewayname): #a list of texts, and the t
         if text_collection.contact.test() == False: #if we don't have a contact for this conversation yet
                 if textmsg.contact.name != None:    #if contact not self
                     text_collection.contact = deepcopy(textmsg.contact)    #They are other participant
-        textmsg.date = parse_date(i.find(as_xhtml('./abbr[@class="dt"]')).attrib["title"]) #date
+        textmsg.date =parse_date(i.find(as_xhtml('./abbr[@class="dt"]')).attrib["title"])
+ #date
         textmsg.text = unescape(i.findtext(as_xhtml('./q'))) #Text. TO DO: html decoder
         text_collection.texts.append(deepcopy(textmsg))
         #newline

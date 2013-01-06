@@ -230,7 +230,7 @@ def process_file(tree, filename = None):
     textNodes = tree.findall(as_xhtml('.//div[@class="hChatLog hfeed"]/div[@class="message"]'))
     if len(textNodes) > 0: #is actually a text file
         #process the text files
-        obj = process_TextConversation(textNodes, re.match('(.*?)(?=_-_\d\d\d\d-\d\d-\d\dT\d\d-\d\d-\d\dZ)', filename).group(0))
+        obj = process_TextConversation(textNodes, re.match('(.*)(?=_-_)', filename).group(0))
     else:
         #look for call/audio
         audioNode = tree.find(as_xhtml('.//div[@class="haudio"]'))
@@ -379,7 +379,7 @@ def getobjs(path):
     for fl in files:
         if fl.endswith('.html'): #no mp3 files
             with open(join(path, fl), 'r') as f: #read the file
-                tree = fromstring(f.read().replace('<br>', "\r\n<br />")) #read properly-formatted html
+                tree = fromstring(unicode(f.read(), errors="ignore").replace('<br>', "\r\n<br />")) #read properly-formatted html
             record = None #reset the variable
             record = process_file(tree, fl) #do the loading
             if record != None:

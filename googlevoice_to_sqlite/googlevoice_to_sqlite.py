@@ -13,7 +13,7 @@ from os.path import join
 import os.path
 import re
 import atexit
-from xml.etree.ElementTree import fromstring
+import html5lib
 import re
 import datetime
 from copy import deepcopy
@@ -130,14 +130,14 @@ def as_xhtml (path):
     return re.sub('/(?=\w)', '/{http://www.w3.org/1999/xhtml}', path)
 ##------------------------------------
 
-
+ 
 #Gets a category label from the HTNL file
 #TO DO: return Inbox, Starred flags
 def get_label(node):
     labelNodes = node.findall(as_xhtml('./div[@class="tags"]/a[@rel="tag"]'))
-    validtags = ('Placed', 'Received', 'Missed', 'Recorded', 'Voicemail') #Valid categories
+    validtags = ('placed', 'received', 'missed', 'recorded', 'voicemail') #Valid categories
     for i in labelNodes:
-        label = i.findtext('.')
+        label = i.attrib['href'].rsplit("#")[1] #last part of href
         if label in validtags:
             return label
     return None
@@ -314,7 +314,7 @@ class gvoiceconn(sqlite3.Connection):
         #only one of these foreign keys are ever used, but both are inserted. So init to null now
         voicemailid = None
         callid = None
-        if(audiorecord.audiotype == 'Voicemail'): #if voicemail, update Voicemailt table and grab resulting ID
+        if(audiorecord.audiotype == 'voicemail'): #if voicemail, update Voicemail table and grab resulting ID
             voicemailid = self.getmaxid('Voicemail')
             self.execute('INSERT INTO Voicemail (VoicemailID, ContactID) VALUES (?, ?)', (voicemailid, contactid))
         else: #Guess what Call the recording is associated with. If exists, insert
@@ -379,7 +379,8 @@ def getobjs(path):
     for fl in files:
         if fl.endswith('.html'): #no mp3 files
             with open(join(path, fl), 'r') as f: #read the file
-                tree = fromstring(unicode(f.read(), errors="ignore").replace('<br>', "\r\n<br />")) #read properly-formatted html
+                tree = html5lib.parse(f, encoding="iso-8859-15", treebuilder="etree")
+				#read properly-formatted html
             record = None #reset the variable
             record = process_file(tree, fl) #do the loading
             if record != None:

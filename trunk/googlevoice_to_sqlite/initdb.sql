@@ -28,9 +28,9 @@ CREATE TABLE PhoneCallType (
     PhoneCallTypeID INTEGER PRIMARY KEY,
     PhoneCallType   TEXT NOT NULL UNIQUE 
 );
-INSERT INTO [PhoneCallType] ([PhoneCallTypeID], [PhoneCallType]) VALUES (1, 'Placed');
-INSERT INTO [PhoneCallType] ([PhoneCallTypeID], [PhoneCallType]) VALUES (2, 'Received');
-INSERT INTO [PhoneCallType] ([PhoneCallTypeID], [PhoneCallType]) VALUES (3, 'Missed');
+INSERT INTO [PhoneCallType] ([PhoneCallTypeID], [PhoneCallType]) VALUES (1, 'placed');
+INSERT INTO [PhoneCallType] ([PhoneCallTypeID], [PhoneCallType]) VALUES (2, 'received');
+INSERT INTO [PhoneCallType] ([PhoneCallTypeID], [PhoneCallType]) VALUES (3, 'missed');
 
 -- Table: PhoneCall
 CREATE TABLE PhoneCall ( 
